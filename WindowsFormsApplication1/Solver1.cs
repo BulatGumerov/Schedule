@@ -11,18 +11,6 @@ namespace WindowsFormsApplication1
 			return nk.Select (i => rs [i]).ToList ();
 		}
 
-		public static IList<int> RIndexes (List<int> rs, IEnumerable<int> vals)
-		{
-			var last = -1;
-			var builder = new List<int> (vals.Count ());
-			foreach (var x in vals) {
-				var i = rs.IndexOf (x, last + 1);
-				builder.Add (i);
-				last = i;
-			}
-			return builder;
-		}
-
 		public static int CalcJd (List<int> ds, List<int> nSub)
 		{
 			var from = 0;
@@ -60,7 +48,10 @@ namespace WindowsFormsApplication1
 			var tk = Math.Max (0, rs.Min ());
 			var solutions = new List<Solution> ();
 			while (all.Any ()) {
-				var nSub = RIndexes (rs, RVals (rs, all).Where (x => x <= tk)).ToList ();
+				var nSub = all.Zip (RVals(rs,all), (x, y) => Tuple.Create (x, y))
+					.Where(tup => tup.Item2 <= tk)
+					.Select(tup => tup.Item1)
+					.ToList();
 				if (nSub.Any ()) {
 					var vals = RVals (rs, all.Except (nSub).ToList ());
 					var jd = CalcJd (ds, nSub);
