@@ -13,7 +13,7 @@ namespace WindowsFormsApplication1
 
 		public static int CalcJd (List<int> ds, List<int> nSub)
 		{
-			var from = -1;
+			var from = 0;
 			var i = 0;
 			var min = nSub.Min (idx => ds [idx]);
 			do {

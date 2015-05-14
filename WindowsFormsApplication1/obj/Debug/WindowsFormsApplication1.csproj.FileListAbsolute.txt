@@ -8,5 +8,14 @@ C:\Users\Bulat\Documents\Visual Studio 2013\Projects\WindowsFormsApplication1\Wi
 C:\Users\Bulat\Documents\Visual Studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
 C:\Users\Bulat\Documents\Visual Studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
 C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
 C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Bulat\Desktop\Schedule\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Bulat\Desktop\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Bulat\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Bulat\Desktop\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
