@@ -61,6 +61,11 @@
             this.label12 = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label13 = new System.Windows.Forms.Label();
+            this.fosF = new System.Windows.Forms.TextBox();
+            this.fosP = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
@@ -313,11 +318,59 @@
             this.chart2.TabIndex = 26;
             this.chart2.Text = "chart2";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(655, 227);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(73, 13);
+            this.label13.TabIndex = 31;
+            this.label13.Text = "fourth solution";
+            // 
+            // fosF
+            // 
+            this.fosF.Enabled = false;
+            this.fosF.Location = new System.Drawing.Point(696, 278);
+            this.fosF.Name = "fosF";
+            this.fosF.Size = new System.Drawing.Size(26, 20);
+            this.fosF.TabIndex = 30;
+            // 
+            // fosP
+            // 
+            this.fosP.Enabled = false;
+            this.fosP.Location = new System.Drawing.Point(696, 250);
+            this.fosP.Name = "fosP";
+            this.fosP.Size = new System.Drawing.Size(142, 20);
+            this.fosP.TabIndex = 29;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(655, 278);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(32, 13);
+            this.label14.TabIndex = 28;
+            this.label14.Text = "F(Pi*)";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(655, 250);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(20, 13);
+            this.label15.TabIndex = 27;
+            this.label15.Text = "Pi*";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 512);
+            this.ClientSize = new System.Drawing.Size(858, 512);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.fosF);
+            this.Controls.Add(this.fosP);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.label10);
@@ -384,6 +437,11 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox fosF;
+        private System.Windows.Forms.TextBox fosP;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
     }
 }
 

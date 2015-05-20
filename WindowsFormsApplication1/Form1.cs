@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -72,11 +73,45 @@ namespace WindowsFormsApplication1
             ssP.Text = ListToString(Solver2.Solve(input));
             ssF.Text = Solver1.F(input.ds, Solver2.Solve(input)).ToString();
 
-            if (dimen <= 15)
+            tsP.Text = ListToString(Solver3.Solve(input));
+            tsF.Text = Solver1.F(input.ds, Solver3.Solve(input)).ToString();
+
+            if (dimen <= 11)
             {
-                tsP.Text = ListToString(Solver3.Solve(input));
-                tsF.Text = Solver1.F(input.ds, Solver3.Solve(input)).ToString();
+                var thread1 = new Thread(() => task(input));
+                thread1.Start();
+                //fosP.Text = ListToString(Solver4.Solve(input));
+                //fosF.Text = Solver1.F(input.ds, Solver4.Solve(input)).ToString();
+                //fosP.Text = fourPi;
+                //fosF.Text = fourFpi.ToString();
             }
+        }
+
+        private void updatePi(string pi)
+        {
+            if (fosP.InvokeRequired)
+            {
+                fosP.Invoke(new Action<string>(updatePi), pi);
+                return;
+            }
+            fosP.Text = pi;
+        }
+
+        private void updateFPi(string fpi)
+        {
+            if (fosF.InvokeRequired)
+            {
+                fosF.Invoke(new Action<string>(updateFPi), fpi);
+                return;
+            }
+            fosF.Text = fpi;
+        }
+
+        private void task(Input input)
+        {
+            var solve = Solver4.Solve(input);
+            updatePi(ListToString(solve));
+            updateFPi(Solver1.F(input.ds,solve).ToString());
         }
 
         private static string ListToString(List<Solution> solution)
@@ -131,13 +166,16 @@ namespace WindowsFormsApplication1
                 solve = Solver2.Solve(elem);
                 var secondResult = new OneResult(solve, Solver1.F(elem.ds, solve));
 
-                OneResult thirdResult=null;
-                if (dim <= 15)
+                solve = Solver3.Solve(elem);
+                var thirdResult = new OneResult(solve, Solver1.F(elem.ds, solve));
+
+                OneResult fourthResult = null;
+                if (dim <= 11)
                 {
-                    solve = Solver3.Solve(elem);
-                    thirdResult = new OneResult(solve, Solver1.F(elem.ds, solve));
+                    solve = Solver4.Solve(elem);
+                    fourthResult = new OneResult(solve, Solver1.F(elem.ds, solve));
                 }
-                var result = new ManyResults(firstResult, secondResult, thirdResult);
+                var result = new ManyResults(firstResult, secondResult, thirdResult, fourthResult);
                 listManyResults.Add(result);
             }
 
@@ -150,12 +188,14 @@ namespace WindowsFormsApplication1
             public OneResult FirstSolution;
             public OneResult SecondSolution;
             public OneResult ThirdSolution;
+            public OneResult FourthSolution;
 
-            public ManyResults(OneResult firstSolution, OneResult secondSolution, OneResult thirdSolution)
+            public ManyResults(OneResult firstSolution, OneResult secondSolution, OneResult thirdSolution, OneResult fourthSolution)
             {
                 FirstSolution = firstSolution;
                 SecondSolution = secondSolution;
                 ThirdSolution = thirdSolution;
+                FourthSolution = fourthSolution;
             }
         }
         public class OneResult
@@ -227,53 +267,50 @@ namespace WindowsFormsApplication1
             var file = new StreamWriter("thirdDescription.txt", false);
             if (manyResList[0].ThirdSolution != null)
             {
-                int f1mtf2, f1mtf3, f2mtf1, f2mtf3, f3mtf1, f3mtf2, f1eqf2, f1eqf3, f2eqf3;
-                f1mtf2 = f1mtf3 = f2mtf1 = f2mtf3 = f3mtf1 = f3mtf2 = f1eqf2 = f1eqf3 = f2eqf3 = 0;
+                int f2mtf3, f3mtf2, f2eqf3, f2mtf4, f4mtf2, f2eqf4, f3mtf4, f4mtf3, f3eqf4;
+                f2mtf3 = f3mtf2 = f2eqf3 = f2mtf4 = f4mtf2 = f2eqf4 = f3mtf4 = f4mtf3 = f3eqf4 = 0;
                 foreach (var elem in manyResList)
                 {
-                    var t = (double)elem.FirstSolution.Fpi/elem.SecondSolution.Fpi;
-                    if (t < 1)
-                        f2mtf1++;
-                    else if (t > 1)
-                        f1mtf2++;
-                    else f1eqf2++;
-
-                    t = (double)elem.FirstSolution.Fpi / elem.ThirdSolution.Fpi;
-                    if (t < 1)
-                        f3mtf1++;
-                    else if (t > 1)
-                        f1mtf3++;
-                    else f1eqf3++;
-
-                    t = (double)elem.SecondSolution.Fpi / elem.ThirdSolution.Fpi;
-                    if (t < 1)
-                        f3mtf2++;
-                    else if (t > 1)
+                    if (elem.SecondSolution.Fpi > elem.ThirdSolution.Fpi)
                         f2mtf3++;
+                    else if (elem.SecondSolution.Fpi < elem.ThirdSolution.Fpi)
+                        f3mtf2++;
                     else f2eqf3++;
+
+                    if (elem.SecondSolution.Fpi > elem.FourthSolution.Fpi)
+                        f2mtf4++;
+                    else if (elem.SecondSolution.Fpi < elem.FourthSolution.Fpi)
+                        f4mtf2++;
+                    else f2eqf4++;
+
+                    if (elem.ThirdSolution.Fpi > elem.FourthSolution.Fpi)
+                        f3mtf4++;
+                    else if (elem.ThirdSolution.Fpi < elem.FourthSolution.Fpi)
+                        f4mtf3++;
+                    else f3eqf4++;
                 }
 
-                var f12sum = f1mtf2 + f2mtf1 + f1eqf2;
                 var f23sum = f2mtf3 + f3mtf2 + f2eqf3;
-                var f13sum = f1mtf3 + f3mtf1 + f1eqf3;
+                var f24sum = f2mtf4 + f4mtf2 + f2eqf4;
+                var f34sum = f3mtf4 + f4mtf3 + f3eqf4;
 
-                file.WriteLine("f1/f2>1: " + f1mtf2 * 100 / f12sum + "%");
-                file.WriteLine("f1/f2<1: " + f2mtf1 * 100 / f12sum + "%");
-                file.WriteLine("f1/f2=1: " + f1eqf2 * 100 / f12sum + "%");
+                file.WriteLine("f2>f3: " + f2mtf3 * 100 / f23sum + "%");
+                file.WriteLine("f2<f3: " + f3mtf2 * 100 / f23sum + "%");
+                file.WriteLine("f2=f3: " + f2eqf3 * 100 / f23sum + "%");
 
-                file.WriteLine("f2/f3>1: " + f2mtf3 * 100 / f23sum + "%");
-                file.WriteLine("f2/f3<1: " + f3mtf2 * 100 / f23sum + "%");
-                file.WriteLine("f2/f3=1: " + f2eqf3 * 100 / f23sum + "%");
+                file.WriteLine("f2>f4: " + f2mtf4 * 100 / f24sum + "%");
+                file.WriteLine("f2<f4: " + f4mtf2 * 100 / f24sum + "%");
+                file.WriteLine("f2=f4: " + f2eqf4 * 100 / f24sum + "%");
 
-                file.WriteLine("f1/f3>1: " + f1mtf3 * 100 / f13sum + "%");
-                file.WriteLine("f1/f3<1: " + f3mtf1 * 100 / f13sum + "%");
-                file.WriteLine("f1/f3=1: " + f1eqf3 * 100 / f13sum + "%");
+                file.WriteLine("f3>f4: " + f3mtf4 * 100 / f34sum + "%");
+                file.WriteLine("f3<f4: " + f4mtf3 * 100 / f34sum + "%");
+                file.WriteLine("f3=f4: " + f3eqf4 * 100 / f34sum + "%");
 
 
                 chart1.Series[0].ChartType = SeriesChartType.Pie;
-                chart1.Series[0].Points.AddXY("f1>f3 "+f1mtf3 * 100.0 / f13sum + "%", f1mtf3 * 100.0 / f13sum);
-                chart1.Series[0].Points.AddXY("f1<f3 "+f3mtf1 * 100.0 / f13sum + "%", f3mtf1 * 100.0 / f13sum);
-                chart1.Series[0].Points.AddXY("f1=f3 "+f1eqf3 * 100.0 / f13sum + "%", f1eqf3 * 100.0 / f13sum);
+                chart1.Series[0].Points.AddXY("f2>f4 " + f2mtf4 * 100.0 / f24sum + "%", f2mtf4 * 100.0 / f24sum);
+                chart1.Series[0].Points.AddXY("f2<f4 " + f4mtf2 * 100.0 / f24sum + "%", f4mtf2 * 100.0 / f24sum);
+                chart1.Series[0].Points.AddXY("f2=f4 " + f2eqf4 * 100.0 / f24sum + "%", f2eqf4 * 100.0 / f24sum);
                 chart1.Series[0].Points[0].Color = Color.Yellow;
                 chart1.Series[0].Points[0].Color = Color.Blue;
                 chart1.Series[0].Points[0].Color = Color.Green;
@@ -281,9 +318,9 @@ namespace WindowsFormsApplication1
                 pictureIteration++;
 
                 chart2.Series[0].ChartType = SeriesChartType.Pie;
-                chart2.Series[0].Points.AddXY("f2>f3 "+f2mtf3 * 100.0 / f23sum + "%", f2mtf3 * 100.0 / f23sum);
-                chart2.Series[0].Points.AddXY("f2<f3 "+f3mtf2 * 100.0 / f23sum + "%", f3mtf2 * 100.0 / f23sum);
-                chart2.Series[0].Points.AddXY("f2=f3 "+f2eqf3 * 100.0 / f23sum + "%", f2eqf3 * 100.0 / f23sum);
+                chart2.Series[0].Points.AddXY("f3>f4 " + f3mtf4 * 100.0 / f34sum + "%", f3mtf4 * 100.0 / f34sum);
+                chart2.Series[0].Points.AddXY("f3<f4 " + f4mtf3 * 100.0 / f34sum + "%", f4mtf3 * 100.0 / f34sum);
+                chart2.Series[0].Points.AddXY("f3=f4 " + f3eqf4 * 100.0 / f34sum + "%", f3eqf4 * 100.0 / f34sum);
                 chart2.Series[0].Points[0].Color = Color.Yellow;
                 chart2.Series[0].Points[0].Color = Color.Blue;
                 chart2.Series[0].Points[0].Color = Color.Green;
@@ -292,27 +329,26 @@ namespace WindowsFormsApplication1
             }
             else
             {
-                int f1mtf2, f2mtf1, f1eqf2;
-                f1mtf2 = f2mtf1 = f1eqf2 = 0;
+                int f3mtf2, f2mtf3, f2eqf3;
+                f3mtf2 = f2mtf3 = f2eqf3 = 0;
                 foreach (var elem in manyResList)
                 {
-                    var t = elem.FirstSolution.Fpi / elem.SecondSolution.Fpi;
-                    if (t < 0)
-                        f2mtf1++;
-                    else if (t > 0)
-                        f1mtf2++;
-                    else f1eqf2++;
+                    if (elem.SecondSolution.Fpi > elem.ThirdSolution.Fpi)
+                        f2mtf3++;
+                    else if (elem.SecondSolution.Fpi < elem.ThirdSolution.Fpi)
+                        f3mtf2++;
+                    else f2eqf3++;
                 }
 
-                var f12sum = f1mtf2 + f2mtf1 + f1eqf2;
-                file.WriteLine("f1/f2>1: " + f1mtf2 * 100 / f12sum + "%");
-                file.WriteLine("f1/f2<1: " + f2mtf1 * 100/ f12sum + "%");
-                file.WriteLine("f1/f2=1: " + f1eqf2 * 100/ f12sum + "%");
+                var f23sum = f2mtf3 + f3mtf2 + f2eqf3;
+                file.WriteLine("f2>f3: " + f2mtf3 * 100 / f23sum + "%");
+                file.WriteLine("f2<f3: " + f3mtf2 * 100 / f23sum + "%");
+                file.WriteLine("f2=f3: " + f2eqf3 * 100 / f23sum + "%");
 
                 chart1.Series[0].ChartType = SeriesChartType.Pie;
-                chart1.Series[0].Points.AddXY("f1>f2", f1mtf2 * 100.0 / f12sum);
-                chart1.Series[0].Points.AddXY("f1<f2", f2mtf1 * 100.0 / f12sum);
-                chart1.Series[0].Points.AddXY("f1=f2", f1eqf2 * 100.0 / f12sum);
+                chart1.Series[0].Points.AddXY("f2>f3", f2mtf3 * 100.0 / f23sum);
+                chart1.Series[0].Points.AddXY("f2<f3", f3mtf2 * 100.0 / f23sum);
+                chart1.Series[0].Points.AddXY("f2=f3", f2eqf3 * 100.0 / f23sum);
                 chart1.Series[0].Points[0].Color = Color.Yellow;
                 chart1.Series[0].Points[0].Color = Color.Blue;
                 chart1.Series[0].Points[0].Color = Color.Green;
