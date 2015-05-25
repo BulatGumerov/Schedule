@@ -46,6 +46,10 @@ namespace WindowsFormsApplication1
                     dataGridView1[j, i].Value = "0";
                 }
             }
+            dataGridView1.Rows[0].HeaderCell.Value = "Rj";
+            dataGridView1.Rows[1].HeaderCell.Value = "Pj";
+            dataGridView1.Rows[2].HeaderCell.Value = "Dj";
+            dataGridView1.RowHeadersWidth = 60;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -56,16 +60,16 @@ namespace WindowsFormsApplication1
             }
 
             var r = new List<int>();
-            var d = new List<int>();
             var p = new List<int>();
+            var d = new List<int>();
 
             for (var i = 0; i < dimen; i++)
             {
                 r.Add(Convert.ToInt32(dataGridView1[i, 0].Value));
-                d.Add(Convert.ToInt32(dataGridView1[i, 1].Value));
-                p.Add(Convert.ToInt32(dataGridView1[i, 2].Value));
+                p.Add(Convert.ToInt32(dataGridView1[i, 1].Value));
+                d.Add(Convert.ToInt32(dataGridView1[i, 2].Value));
             }
-            var input = new Input(r, d, p);
+            var input = new Input(r, p, d);
 
             fsP.Text = ListToString(Solver1.Solve(input));
             fsF.Text = Solver1.F(input.ds, Solver1.Solve(input)).ToString();
@@ -265,7 +269,7 @@ namespace WindowsFormsApplication1
         private void CreateThirdDesctiption(List<ManyResults> manyResList)
         {
             var file = new StreamWriter("thirdDescription.txt", false);
-            if (manyResList[0].ThirdSolution != null)
+            if (manyResList[0].FourthSolution != null)
             {
                 int f2mtf3, f3mtf2, f2eqf3, f2mtf4, f4mtf2, f2eqf4, f3mtf4, f4mtf3, f3eqf4;
                 f2mtf3 = f3mtf2 = f2eqf3 = f2mtf4 = f4mtf2 = f2eqf4 = f3mtf4 = f4mtf3 = f3eqf4 = 0;
@@ -306,10 +310,18 @@ namespace WindowsFormsApplication1
                 file.WriteLine("f3<f4: " + f4mtf3 * 100 / f34sum + "%");
                 file.WriteLine("f3=f4: " + f3eqf4 * 100 / f34sum + "%");
 
+                var aTR = AdditionalThirdDescription(manyResList);
+                foreach (var str in aTR)
+                {
+                    file.WriteLine(str);
+                }
 
                 chart1.Series[0].ChartType = SeriesChartType.Pie;
+                if (f2mtf4>0)
                 chart1.Series[0].Points.AddXY("f2>f4 " + f2mtf4 * 100.0 / f24sum + "%", f2mtf4 * 100.0 / f24sum);
+                if (f4mtf2>0)
                 chart1.Series[0].Points.AddXY("f2<f4 " + f4mtf2 * 100.0 / f24sum + "%", f4mtf2 * 100.0 / f24sum);
+                if (f2eqf4>0)
                 chart1.Series[0].Points.AddXY("f2=f4 " + f2eqf4 * 100.0 / f24sum + "%", f2eqf4 * 100.0 / f24sum);
                 chart1.Series[0].Points[0].Color = Color.Yellow;
                 chart1.Series[0].Points[0].Color = Color.Blue;
@@ -318,8 +330,11 @@ namespace WindowsFormsApplication1
                 pictureIteration++;
 
                 chart2.Series[0].ChartType = SeriesChartType.Pie;
+                if (f3mtf4>0)
                 chart2.Series[0].Points.AddXY("f3>f4 " + f3mtf4 * 100.0 / f34sum + "%", f3mtf4 * 100.0 / f34sum);
+                if (f4mtf3>0)
                 chart2.Series[0].Points.AddXY("f3<f4 " + f4mtf3 * 100.0 / f34sum + "%", f4mtf3 * 100.0 / f34sum);
+                if (f3eqf4>0)
                 chart2.Series[0].Points.AddXY("f3=f4 " + f3eqf4 * 100.0 / f34sum + "%", f3eqf4 * 100.0 / f34sum);
                 chart2.Series[0].Points[0].Color = Color.Yellow;
                 chart2.Series[0].Points[0].Color = Color.Blue;
@@ -345,9 +360,18 @@ namespace WindowsFormsApplication1
                 file.WriteLine("f2<f3: " + f3mtf2 * 100 / f23sum + "%");
                 file.WriteLine("f2=f3: " + f2eqf3 * 100 / f23sum + "%");
 
+                var aTR = AdditionalThirdDescription(manyResList);
+                foreach (var str in aTR)
+                {
+                    file.WriteLine(str);
+                }
+
                 chart1.Series[0].ChartType = SeriesChartType.Pie;
+                if (f2mtf3>0)
                 chart1.Series[0].Points.AddXY("f2>f3", f2mtf3 * 100.0 / f23sum);
+                if (f3mtf2>0)
                 chart1.Series[0].Points.AddXY("f2<f3", f3mtf2 * 100.0 / f23sum);
+                if (f2eqf3>0)
                 chart1.Series[0].Points.AddXY("f2=f3", f2eqf3 * 100.0 / f23sum);
                 chart1.Series[0].Points[0].Color = Color.Yellow;
                 chart1.Series[0].Points[0].Color = Color.Blue;
@@ -358,5 +382,73 @@ namespace WindowsFormsApplication1
             file.Close();
 
         }
+
+        private List<string> AdditionalThirdDescription(List<ManyResults> manyResList)
+        {
+            List<string> aTD = new List<string>();
+            if (manyResList[0].FourthSolution != null)
+            {
+                var f2f4 = new int[10];
+                var f3f4 = new int[10];
+                foreach (var elem in manyResList)
+                {
+                    var t1 = elem.SecondSolution.Fpi - elem.FourthSolution.Fpi;
+                    var t2 = elem.ThirdSolution.Fpi - elem.FourthSolution.Fpi;
+                    if (t1 <= 9)
+                    {
+                        f2f4[t1.GetValueOrDefault()]++;
+                    }
+                    else f2f4[9]++;
+                    if (t2 <= 9)
+                    {
+                        f3f4[t2.GetValueOrDefault()]++;
+                    }
+                    else f3f4[9]++;
+                }
+
+                for(var i = 0; i < f2f4.Length; i++)
+                {
+                    aTD.Add("f4-f2="+i+" "+(double)f2f4[i]*100/f2f4.Sum()+"%");
+                    aTD.Add("f4-f3="+i+" "+(double)f3f4[i]*100/f3f4.Sum()+"%");
+                }
+            }
+            else
+            {
+                var f2f3 = new int[10];
+                var f3f2 = new int[10];
+                foreach (var dif in manyResList.Select(elem => elem.ThirdSolution.Fpi - elem.SecondSolution.Fpi))
+                {
+                    if (dif >= 0)
+                    {
+                        if (dif <= 9)
+                        {
+                            f2f3[dif.GetValueOrDefault()]++;
+                        }
+                        else
+                        {
+                            f2f3[9]++;
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Abs(dif.GetValueOrDefault()) <= 9)
+                        {
+                            f3f2[Math.Abs(dif.GetValueOrDefault())]++;
+                        }
+                        else
+                        {
+                            f3f2[9]++;
+                        }
+                    }
+                }
+                for (var i = 0; i < f2f3.Length; i++)
+                {
+                    aTD.Add("f3-f2>=0 && ="+i+" "+(double)f2f3[i]*100/f2f3.Sum()+"%");
+                    aTD.Add("f3-f2<0 && ="+i+ " "+(double)f3f2[i]*100/f3f2.Sum()+"%");
+                }
+            };
+            return aTD;
+        }
+
     }
 }
