@@ -261,7 +261,7 @@ namespace WindowsFormsApplication1
 
                 if (manyResList[i].FourthSolution != null)
                 {
-                    file.WriteLine(i + "." + "3)" + "Pi*=" + manyResList[i].FourthSolution.Pi);
+                    file.WriteLine(i + "." + "4)" + "Pi*=" + manyResList[i].FourthSolution.Pi);
                     file.WriteLine("F(Pi*)=" + manyResList[i].FourthSolution.Fpi);
                 }
                 file.WriteLine(@"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
