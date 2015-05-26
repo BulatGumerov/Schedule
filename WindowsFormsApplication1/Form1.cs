@@ -256,10 +256,13 @@ namespace WindowsFormsApplication1
                 file.WriteLine(i + "." + "2)" + "Pi*=" + manyResList[i].SecondSolution.Pi);
                 file.WriteLine("F(Pi*)=" + manyResList[i].SecondSolution.Fpi);
 
-                if (manyResList[i].ThirdSolution != null)
+                file.WriteLine(i + "." + "3)" + "Pi*=" + manyResList[i].ThirdSolution.Pi);
+                file.WriteLine("F(Pi*)=" + manyResList[i].ThirdSolution.Fpi);
+
+                if (manyResList[i].FourthSolution != null)
                 {
-                    file.WriteLine(i + "." + "3)" + "Pi*=" + manyResList[i].ThirdSolution.Pi);
-                    file.WriteLine("F(Pi*)=" + manyResList[i].ThirdSolution.Fpi);
+                    file.WriteLine(i + "." + "3)" + "Pi*=" + manyResList[i].FourthSolution.Pi);
+                    file.WriteLine("F(Pi*)=" + manyResList[i].FourthSolution.Fpi);
                 }
                 file.WriteLine(@"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
             }
